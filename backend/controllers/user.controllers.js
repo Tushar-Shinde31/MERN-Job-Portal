@@ -2,85 +2,87 @@ import { User } from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-
+// Register a new user
 export const register = async (req, res) => {
     try {
         const { fullname, email, phoneNumber, password, role } = req.body;
-         
+
         if (!fullname || !email || !phoneNumber || !password || !role) {
             return res.status(400).json({
                 message: "Something is missing",
                 success: false
             });
-        };
-        const file = req.file;
-        const fileUri = getDataUri(file);
-        const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
-
-        const user = await User.findOne({ email });
-        if (user) {
-            return res.status(400).json({
-                message: 'User already exist with this email.',
-                success: false,
-            })
         }
+
+        const existingUser = await User.findOne({ email });
+
+        if (existingUser) {
+            return res.status(400).json({
+                message: "User already exists",
+                success: false
+            });
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        await User.create({
+        const newUser = await User.create({
             fullname,
             email,
             phoneNumber,
             password: hashedPassword,
-            role,
-            profile:{
-                profilePhoto:cloudResponse.secure_url,
-            }
+            role
         });
 
         return res.status(201).json({
-            message: "Account created successfully.",
-            success: true
+            message: "User registered successfully",
+            success: true,
         });
+
     } catch (error) {
-        console.log(error);
+        console.error("Registration error:", error);
+        return res.status(500).json({
+            message: "Server error",
+            success: false
+        });
     }
-}
+};
+
 export const login = async (req, res) => {
-    try {
-        const { email, password, role } = req.body;
-        
-        if (!email || !password || !role) {
+    try{
+        const {email, password, role} = req.body;
+        if(!email || !password || !role){
             return res.status(400).json({
-                message: "Something is missing",
-                success: false
-            });
+                message:"Something is missing",
+                success:false
+            })
         };
-        let user = await User.findOne({ email });
-        if (!user) {
+        let user = await User.findOne({email});
+        if(!user){
             return res.status(400).json({
-                message: "Incorrect email or password.",
-                success: false,
+                message:"User not found",
+                success:false
             })
         }
         const isPasswordMatch = await bcrypt.compare(password, user.password);
-        if (!isPasswordMatch) {
+        if(!isPasswordMatch){
             return res.status(400).json({
-                message: "Incorrect email or password.",
-                success: false,
+                message:"Invalid credentials",
+                success:false
             })
-        };
-        // check role is correct or not
-        if (role !== user.role) {
-            return res.status(400).json({
-                message: "Account doesn't exist with current role.",
-                success: false
-            })
-        };
-
-        const tokenData = {
-            userId: user._id
         }
-        const token = await jwt.sign(tokenData, process.env.SECRET_KEY, { expiresIn: '1d' });
+        //check role is correct or not
+        if(user.role !== role){
+            return res.status(400).json({
+                message:"Invalid credentials",
+                success:false
+            })
+        };
+        //create token
+        const tokenData = {
+            userId: user._id,
+        }
+        const token = await jwt.sign(tokenData, process.env.SECRET_KEY, { expiresIn: "1d" });
+
 
         user = {
             _id: user._id,
@@ -91,19 +93,20 @@ export const login = async (req, res) => {
             profile: user.profile
         }
 
-        return res.status(200).cookie("token", token, { maxAge: 1 * 24 * 60 * 60 * 1000, httpsOnly: true, sameSite: 'strict' }).json({
+        return res.status(200).cookie("token", token, {maxAge: 24*60*60*1000, httpOnly: true, sameSite: 'strict'}).json({
             message: `Welcome back ${user.fullname}`,
             user,
-            success: true
+            success: true,
         })
     } catch (error) {
         console.log(error);
     }
 }
+
 export const logout = async (req, res) => {
-    try {
-        return res.status(200).cookie("token", "", { maxAge: 0 }).json({
-            message: "Logged out successfully.",
+    try{
+        return res.status(200).cookie("token", "" , {maxAge:0}).json ({
+            message: "Logged out successfully",
             success: true
         })
     } catch (error) {
@@ -115,30 +118,27 @@ export const updateProfile = async (req, res) => {
     try{
         const {fullname, email, phoneNumber, bio, skills} = req.body;
         const file = req.file;
-        if(!fullname || !email || !phoneNumber || !bio || !skills){
-            return res.status(400).json({
-                message:"Something is missing",
-                success:false
-            })
-        };
 
-        const skillsArray = skills.split(",");
-        const userId = req.id;
+        let skillsArray;
+        if(skills){
+            skillsArray = skills.split(",");
+        }
+        const userId = req.id //update middleware to get user id from token
         let user = await User.findById(userId);
+
         if(!user){
             return res.status(400).json({
-                message:"User not found",
-                success:false
+                message: "User not found",
+                success: false
             })
         }
-
-        //updating data
-        user.fullname = fullname;
-        user.email = email;
-        user.phoneNumber = phoneNumber;
-        user.profile.bio = bio;
-        user.profile.skills = skillsArray;
-
+        //update data
+       if(fullname) user.fullname = fullname;
+        if(email) user.email = email;
+        if(phoneNumber) user.phoneNumber = phoneNumber;
+        if(bio) user.bio = bio;
+        if(skills) user.skills = skillsArray;
+        //resume comes letter
         await user.save();
 
         user = {
@@ -151,7 +151,7 @@ export const updateProfile = async (req, res) => {
         }
 
         return res.status(200).json({
-            message: "Profile updated successfully.",
+            message: "Profile updated successfully",
             user,
             success: true
         })
