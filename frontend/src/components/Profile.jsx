@@ -7,13 +7,16 @@ import { Badge } from './ui/badge'
 import { Label } from './ui/label'
 import AppliedJobTable from './AppliedJobTable'
 import UpdateProfileDialog from './UpdateProfileDialog'
+import { useSelector } from 'react-redux'
+// import { useStore } from 'react-redux'
 
-const skills = ['C++' , 'Java', 'Python', 'JavaScript', 'React', 'Node.js', 'Express.js', 'MongoDB', 'MySQL', 'HTML', 'CSS']
+// const skills = ['C++' , 'Java', 'Python', 'JavaScript', 'React', 'Node.js', 'Express.js', 'MongoDB', 'MySQL', 'HTML', 'CSS']
 
 const isResume = true; // Change this to false to test the other condition
 
 const Profile = () => {
   const [open, setOpen] = useState(false);
+  const {user} = useSelector(store=>store.auth)
   return (
     <div>
       <Navbar />
@@ -24,8 +27,8 @@ const Profile = () => {
               <AvatarImage src="https://imgs.search.brave.com/XVqL0jTcI2X8zuC5NlYsJj_akfW_7C10Oq9DjGaVZJ8/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9jZG4u/cHJvZC53ZWJzaXRl/LWZpbGVzLmNvbS82/MmJkYzkzZTljY2Nm/YjQzZTE1NTEwNGMv/NjY2M2EwNzdmYWU2/NGUzZTBiZmQzYWJi/X2JhdG1hbiUyMHBm/cCUyMGZvciUyMHRp/a3RvayUyMCg2KS5w/bmc" />
             </Avatar>
             <div>
-              <h1 className='font-medium text-xl'>Full Name</h1>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis, obcaecati!</p>
+              <h1 className='font-medium text-xl'>{user?.fullname}</h1>
+              <p>{user?.profile?.bio}</p>
             </div>
           </div>
           <Button onClick={() => setOpen(true)} variant="outline">
@@ -37,18 +40,18 @@ const Profile = () => {
         <div className='mt-8'>
           <div className='flex items-center gap-3 my-2'>
             <Mail />
-            <span>tusharshinde2250@gmail.com</span>
+            <span>{user?.email}</span>
           </div>
           <div className='flex items-center gap-3 my-2'>
             <Contact />
-            <span>+91 9876543210</span> {/* Add contact info here if needed */}
+            <span>{user?.phoneNumber}</span> {/* Add contact info here if needed */}
           </div>
         </div>
         <div className='my-5'>
           <h1>Skills</h1>
           <div className='flex items-center gap-1'>
           {
-            skills.length != 0 ? skills.map((item, index) => <Badge key={index}>{item}</Badge>) : <span>NA</span>
+            user?.profile?.skills.length != 0 ? user?.profile?.skills.map((item, index) => <Badge key={index}>{item}</Badge>) : <span>NA</span>
           }
           </div>
         </div>
