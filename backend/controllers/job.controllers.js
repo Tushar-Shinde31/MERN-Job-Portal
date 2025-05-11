@@ -1,109 +1,102 @@
-import{ Job } from "../models/job.model.js";
+import { Job } from "../models/job.model.js";
 
+// admin post krega job
 export const postJob = async (req, res) => {
     try {
-        const {
-            title,
-            description,
-            requirements,
-            salary,
-            location,
-            jobType,
-            experience,
-            position,
-            companyId
-        } = req.body;
+        const { title, description, requirements, salary, location, jobType, experience, position, companyId } = req.body;
+        const userId = req.id;
 
-        const userId = req.id; // coming from auth middleware
-
-        if (
-            !title || !description || !requirements || !salary ||
-            !location || !jobType || !experience || !position || !companyId
-        ) {
-            return res.status(400).json({ message: "Please fill all the fields" });
-        }
-
+        if (!title || !description || !requirements || !salary || !location || !jobType || !experience || !position || !companyId) {
+            return res.status(400).json({
+                message: "Somethin is missing.",
+                success: false
+            })
+        };
         const job = await Job.create({
             title,
             description,
-            requirements: Array.isArray(requirements)
-                ? requirements
-                : requirements.split(","),
+            requirements: requirements.split(","),
             salary: Number(salary),
             location,
             jobType,
             experienceLevel: experience,
             position,
-            company: companyId,      // ✅ should match your schema
-            created_by: userId       // ✅ should match your schema
+            company: companyId,
+            created_by: userId
         });
-
         return res.status(201).json({
-            message: "Job posted successfully",
-            job
+            message: "New job created successfully.",
+            job,
+            success: true
         });
-
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ message: "Internal server error" });
     }
-};
-
-
-export const getJobs = async (req, res) => {
-    try{
-        const keyword = req.query.keyword || ""; //search keyword
+}
+// student k liye
+export const getAllJobs = async (req, res) => {
+    try {
+        const keyword = req.query.keyword || "";
         const query = {
             $or: [
                 { title: { $regex: keyword, $options: "i" } },
                 { description: { $regex: keyword, $options: "i" } },
-                // { requirements: { $regex: keyword, $options: "i" } },
-                // { location: { $regex: keyword, $options: "i" } },
-                // { jobType: { $regex: keyword, $options: "i" } },
-                // { experienceLevel: { $regex: keyword, $options: "i" } },
-                // { position: { $regex: keyword, $options: "i" } }
             ]
         };
         const jobs = await Job.find(query).populate({
-            path: "company",
-        }).sort({ createdAt: -1 }); //sort by latest job first
-        if(!jobs) {
-            return res.status(404).json({ message: "No jobs found" });
-        }
-        return res.status(200).json({ message: "Jobs fetched successfully", jobs });
-
+            path: "company"
+        }).sort({ createdAt: -1 });
+        
+        return res.status(200).json({
+            jobs,
+            success: true
+        });
     } catch (error) {
-        console.log (error);
-        return res.status(500).json({ message: "Internal server error" });
+        console.error("Error in getAllJobs:", error);
+        return res.status(500).json({
+            message: "Internal server error",
+            success: false,
+            error: error.message
+        });
     }
 }
-
+// student
 export const getJobById = async (req, res) => {
-    try{
+    try {
         const jobId = req.params.id;
-        const job = await Job.findById(jobId);
-        if(!job) {
-            return res.status(404).json({ message: "Job not found" });
-        }
-        return res.status(200).json({ message: "Job found", job });
-
-    }catch (error) {
-        console.log (error);
-        return res.status(500).json({ message: "Internal server error" });
+        const job = await Job.findById(jobId).populate({
+            path:"applications"
+        });
+        if (!job) {
+            return res.status(404).json({
+                message: "Jobs not found.",
+                success: false
+            })
+        };
+        return res.status(200).json({ job, success: true });
+    } catch (error) {
+        console.log(error);
     }
 }
-
-//admin kitne job create kra abhi tk
+// admin kitne job create kra hai abhi tk
 export const getAdminJobs = async (req, res) => {
-    try{
-        const adminId = req.id; //logged in user id
-        const jobs = await Job.find({created_by: adminId});
-        if(!jobs) {
-            return res.status(404).json({ message: "No jobs found" });
-        }
-        return res.status(200).json({ message: "Jobs fetched successfully", jobs });
+    try {
+        const adminId = req.id;
+        const jobs = await Job.find({ created_by: adminId }).populate({
+            path:'company',
+            createdAt:-1
+        });
+        if (!jobs) {
+            return res.status(404).json({
+                message: "Jobs not found.",
+                success: false
+            })
+        };
+        return res.status(200).json({
+            jobs,
+            success: true
+        })
     } catch (error) {
-        console.log (error);
-        return res.status(500).json({ message: "Internal server error" });
+        console.log(error);
     }
 }
