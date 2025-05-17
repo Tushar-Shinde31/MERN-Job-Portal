@@ -6,17 +6,19 @@ import LatestJobs from './LatestJobs'
 import Footer from './Footer'
 import useGetAllJobs from '../hooks/useGetAllJobs'
 import { useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 const Home = () => {
   useGetAllJobs
   const {user} = useSelector(store => store.auth);
-  const navigate = useNavigate();
-  useEffect(() => {
-    if(user?.role === 'recruiter'){
-      navigate("/admin/companies");
-    }
-  },[]);
+  // const navigate = useNavigate();
+  // const location = useLocation();
+
+  // useEffect(() => {
+  //   if(user?.role === 'recruiter' && !location.pathname.startsWith('/admin')) {
+  //     navigate("/admin/companies");
+  //   }
+  // },[user, location.pathname]);
   
   return (
     <div>
