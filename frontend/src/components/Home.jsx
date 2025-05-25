@@ -11,14 +11,14 @@ import { useNavigate, useLocation } from 'react-router-dom'
 const Home = () => {
   useGetAllJobs
   const {user} = useSelector(store => store.auth);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   // const location = useLocation();
 
-  // useEffect(() => {
-  //   if(user?.role === 'recruiter' && !location.pathname.startsWith('/admin')) {
-  //     navigate("/admin/companies");
-  //   }
-  // },[user, location.pathname]);
+  useEffect(() => {
+    if(user?.role === 'recruiter' ) {
+      navigate("/admin/companies");
+    }
+  },[]);
   
   return (
     <div>
