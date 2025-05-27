@@ -40,7 +40,7 @@ const HeroSection = () => {
         ></motion.div>
       </div>
 
-      <div className="flex flex-col gap-8 my-16">
+      <div className="flex flex-col gap-8 mb-16">
         <motion.span 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -87,13 +87,14 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.8 }}
-          className="flex w-full max-w-2xl shadow-lg border border-gray-200 pl-6 rounded-full items-center gap-4 mx-auto bg-white hover:shadow-xl transition-shadow duration-300"
+          className="flex w-full max-w-3xl shadow-lg border border-gray-200 pl-8 rounded-full items-center gap-4 mx-auto bg-white hover:shadow-2xl transition-all duration-300 relative before:absolute before:inset-0 before:p-[2px] before:rounded-full before:bg-gradient-to-r before:from-purple-500 before:via-pink-500 before:to-purple-500 before:animate-shine before:opacity-0 hover:before:opacity-100 before:-z-10"
         >
+          <div className="absolute inset-0 bg-white rounded-full -z-10"></div>
           <input 
             type="text"
             placeholder='Search for jobs, companies, etc.'
             onChange={(e) => setQuery(e.target.value)}
-            className='outline-none border-none w-full py-4 text-gray-700 placeholder-gray-400'
+            className='outline-none border-none w-full py-6 text-gray-700 placeholder-gray-400 text-lg'
           />
           <motion.div
             whileHover={{ scale: 1.05 }}
@@ -101,13 +102,14 @@ const HeroSection = () => {
           >
             <Button 
               onClick={searchJobHandler} 
-              className="rounded-full bg-purple-600 hover:bg-purple-700 text-white p-4 m-1 transition-all duration-300"
+              className="rounded-full bg-purple-600 hover:bg-purple-700 text-white p-5 m-1.5 transition-all duration-300 shadow-md hover:shadow-lg"
             >
-              <Search className='h-5 w-5'/>
+              <Search className='h-6 w-6'/>
             </Button>
           </motion.div>
         </motion.div>
 
+        <br />
         {/* Stats Section */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}

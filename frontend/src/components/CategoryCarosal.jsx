@@ -48,8 +48,14 @@ const CategoryCarousel = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="py-12 bg-gradient-to-b from-white to-purple-50"
+            className="pt-4 pb-12 relative overflow-hidden bg-gradient-to-br from-purple-50 via-white to-blue-50"
         >
+            {/* Background decorative elements */}
+            <div className="absolute inset-0 -z-10">
+                <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] opacity-20"></div>
+                <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-purple-100/30 via-transparent to-blue-100/30"></div>
+            </div>
+
             <motion.h2 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
