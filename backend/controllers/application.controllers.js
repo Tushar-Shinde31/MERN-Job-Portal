@@ -43,6 +43,10 @@ export const applyJob = async (req, res) => {
         })
     } catch (error) {
         console.log(error);
+        return res.status(500).json({
+            message: 'Internal server error',
+            success: false
+        });
     }
 };
 export const getAppliedJobs = async (req,res) => {
@@ -68,6 +72,10 @@ export const getAppliedJobs = async (req,res) => {
         })
     } catch (error) {
         console.log(error);
+        return res.status(500).json({
+            message: 'Internal server error',
+            success: false
+        });
     }
 }
 // admin dekhega kitna user ne apply kiya hai
@@ -78,7 +86,8 @@ export const getApplicants = async (req,res) => {
             path:'applications',
             options:{sort:{createdAt:-1}},
             populate:{
-                path:'applicant'
+                path:'applicant',
+                select: 'fullname email phoneNumber profile'
             }
         });
         if(!job){
@@ -89,10 +98,14 @@ export const getApplicants = async (req,res) => {
         };
         return res.status(200).json({
             job, 
-            succees:true
+            success:true
         });
     } catch (error) {
         console.log(error);
+        return res.status(500).json({
+            message: 'Internal server error',
+            success: false
+        });
     }
 }
 export const updateStatus = async (req,res) => {
@@ -126,5 +139,9 @@ export const updateStatus = async (req,res) => {
 
     } catch (error) {
         console.log(error);
+        return res.status(500).json({
+            message: 'Internal server error',
+            success: false
+        });
     }
 }
