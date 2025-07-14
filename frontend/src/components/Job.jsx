@@ -18,6 +18,17 @@ const Job = ({job}) => {
 
   return (
     <div className="relative bg-white rounded-xl shadow-md border border-gray-200 p-6 flex flex-col gap-4 transition-transform duration-200 hover:shadow-lg">
+       <span className="text-gray-400 font-medium">
+          {/* Date formatting logic */}
+          {(() => {
+            const createdAt = new Date(job?.createdAt);
+            const currentTime = new Date();
+            const daysAgo = Math.floor((currentTime - createdAt) / (1000 * 60 * 60 * 24));
+            if (daysAgo === 0) return "Today";
+            if (daysAgo === 1) return "Yesterday";
+            return `${daysAgo} days ago`;
+          })()}
+        </span>
       {/* Header: Company Logo & Name */}
       <div className="flex items-center gap-3 mb-2">
         <div className="bg-gray-100 rounded-full p-2 border border-gray-200 flex items-center justify-center w-12 h-12">
@@ -61,18 +72,6 @@ const Job = ({job}) => {
       <div className="flex items-center gap-4 mt-2">
         <Button onClick={() => navigate(`/description/${job?._id}`)} variant="outline" className="rounded-full border-gray-200 text-gray-700 font-medium">Details</Button>
         <Button className="bg-gray-800 text-white font-medium rounded-full hover:bg-gray-900">Save for Later</Button>
-        <span className="ml-auto text-xs text-gray-400 font-medium">
-          {/* Date formatting logic */}
-          {(() => {
-            const createdAt = new Date(job?.createdAt);
-            const currentTime = new Date();
-            const daysAgo = Math.floor((currentTime - createdAt) / (1000 * 60 * 60 * 24));
-            if (daysAgo === 0) return "Today";
-            if (daysAgo === 1) return "Yesterday";
-            if (daysAgo < 7) return `${daysAgo} days ago`;
-            return createdAt.toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' });
-          })()}
-        </span>
       </div>
     </div>
   )
