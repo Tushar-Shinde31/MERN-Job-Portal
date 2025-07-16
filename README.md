@@ -2,7 +2,7 @@
 
 🚀 A modern, responsive, and production-ready **Job Portal** built using the **MERN stack (MongoDB, Express.js, React.js, Node.js)**. It enables companies to post jobs and applicants to explore and apply with ease.
 
-🔗 **Live Demo:** [nextHired on Render](https://nexthired-the-full-stack-job-portal.onrender.com/)
+🔗 **Live Demo:** [nextHired on Render](https://nexthired-the-full-stack-job-portal.onrender.com)
 
 ---
 
