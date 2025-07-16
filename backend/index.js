@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 const corsOptions = {
-    origin: 'http://localhost:5173',
+    origin: 'https://nexthired-the-full-stack-job-portal.onrender.com',
     credentials: true, // Allow credentials (cookies, authorization headers, etc.) to be sent
 }
 app.use(cors(corsOptions));
