@@ -74,7 +74,22 @@ npm install
 npm start
 ```
 
-> ⚠️ Don't forget to add your `.env` file in both `backend/` and `frontend/` folders. (Mongo URI, JWT Secret, etc.)
+---
+
+## 🧾 Example `.env` File
+
+Create a `.env` file in the `backend/` directory with the following content:
+
+```env
+MONGO_URI=
+PORT=
+SECRET_KEY=
+CLOUD_NAME=
+API_KEY=
+API_SECRET=
+```
+
+> ⚠️ **Note:** Never commit your real `.env` file. This is just an example for development setup.
 
 ---
 
