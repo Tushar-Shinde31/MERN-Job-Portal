@@ -97,12 +97,12 @@ npm start
 Create a `.env` file in the `backend/` directory with the following content:
 
 ```env
-MONGO_URI=mongodb+srv://urtusharshinde:1xq65nnpg3pI5GIM@cluster0.zh4ksdf.mongodb.net/
-PORT=8000
-SECRET_KEY=28867e5d9338d7525f998c5ba5c3a2a87c263306d57d010b91c320c1966546a4e608f2c45533bf3ca6121d0ff536b25004742554a0c206634f6a2d5d731b9eff
-CLOUD_NAME=db7hthzg4
-API_KEY=418968599748564
-API_SECRET=Xk7IY4Dyr6MTFi3GArYnVIQuRNE
+MONGO_URI=
+PORT=
+SECRET_KEY=
+CLOUD_NAME=
+API_KEY=
+API_SECRET=
 ```
 
 > ⚠️ **Note:** Never commit your real `.env` file. This is just an example for development setup.
