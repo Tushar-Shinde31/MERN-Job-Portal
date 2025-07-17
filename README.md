@@ -129,12 +129,6 @@ Built with ❤️ by [**Tushar Shinde**](https://github.com/Tushar-Shinde31)
 
 ---
 
-## 📜 License
-
-This project is licensed under the [MIT License](LICENSE).
-
----
-
 ## 🙌 Support
 
 If you like this project, consider giving it a ⭐ on GitHub!  
